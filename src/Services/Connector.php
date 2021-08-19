@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Database;
 use App\Entities\Server;
 use App\Entities\Site;
 use GuzzleHttp\Client;
@@ -34,9 +35,22 @@ class Connector
     {
         $json = $this->call('/api/v1/servers/' . $server->id . '/sites');
 
-        return array_map(function ($properties) {
+        return array_map(function ($properties) use ($server) {
+            $properties->server = $server;
+
             return new Site((array) $properties);
         }, $json->sites);
+    }
+
+    public function getDatabases(Server $server): array
+    {
+        $json = $this->call('/api/v1/servers/' . $server->id . '/databases');
+
+        return array_map(function ($properties) use ($server) {
+            $properties->server = $server;
+
+            return new Database((array) $properties);
+        }, $json->databases);
     }
 
     private function call(string $uri)

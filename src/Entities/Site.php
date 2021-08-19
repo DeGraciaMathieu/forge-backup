@@ -27,4 +27,5 @@ class Site extends Entity
     public $deployment_url;
     public $created_at;
     public $tags;
+    public Server $server;
 }
